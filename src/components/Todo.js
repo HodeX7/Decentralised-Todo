@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { removeTodo } from "../todoSlice";
 
-const Todo = ({ todoList, setTodoList, index, title, desc, id }) => {
+const Todo = ({ index, title, desc, id, listId }) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const toggleDrawer = (open) => (event) => {
@@ -25,7 +25,7 @@ const Todo = ({ todoList, setTodoList, index, title, desc, id }) => {
   };
 
   return (
-    <Draggable draggableId={id.toString()} index={index}>
+    <Draggable draggableId={"1"} index={index}>
       {(provided) => {
         return (
           <div
@@ -55,7 +55,7 @@ const Todo = ({ todoList, setTodoList, index, title, desc, id }) => {
               {/* Implement Delete Todo logic from smart contract */}
               <IconButton
                 onClick={() => {
-                  dispatch(removeTodo(id));
+                  dispatch(removeTodo({ listId: listId, todoId: id }));
                 }}
               >
                 <DeleteIcon className="addButton" sx={{ cursor: "pointer" }} />
@@ -80,11 +80,7 @@ const Todo = ({ todoList, setTodoList, index, title, desc, id }) => {
               anchor="right"
               open={open}
             >
-              <EditDrawer
-                todoList={todoList}
-                id={id}
-                setTodoList={setTodoList}
-              />
+              <EditDrawer id={id} listId={listId} />
             </Drawer>
           </div>
         );

@@ -4,7 +4,7 @@ import { Box, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { changeTodo } from "../todoSlice";
 import { useSelector } from "react-redux";
-const EditDrawer = ({ id }) => {
+const EditDrawer = ({ id, listId }) => {
   const dispatch = useDispatch();
   const [editTodo, setEditTodo] = useState({
     title: "",
@@ -13,9 +13,16 @@ const EditDrawer = ({ id }) => {
 
   const todos = useSelector((state) => state.todoSlice);
   useEffect(() => {
-    const toEdit = todos.todoList.filter((todo) => todo.id === id);
-    console.log(toEdit);
-    setEditTodo({ title: toEdit[0].title, desc: toEdit[0].desc });
+    const toEdit = todos.todoList.find((ele) => {
+      if (ele.id === listId) {
+        const newList = ele.todos.filter((item) => item.id === id);
+        console.log(newList);
+        setEditTodo(newList[0]);
+        console.log(editTodo);
+      }
+    });
+    // console.log(editTodo);
+    // setEditTodo({ title: toEdit[0].title, desc: toEdit[0].desc });
   }, []);
 
   return (
@@ -93,13 +100,19 @@ const EditDrawer = ({ id }) => {
           width: "16vw",
         }}
         onClick={() => {
-          const toEdit = todos.todoList.map((todo) => {
-            if (todo.id === id) {
-              return { title: editTodo.title, desc: editTodo.desc, id: id };
+          const toEdit = todos.todoList.map((ele) => {
+            if (ele.id === listId) {
+              const newSublist = ele.todos.map((todo) => {
+                if (todo.id === id) {
+                  return { id: id, title: editTodo.title, desc: editTodo.desc };
+                }
+                return todo;
+              });
+              return newSublist;
             }
-            return todo;
+            return ele;
           });
-          dispatch(changeTodo(toEdit));
+          dispatch(changeTodo({ id: listId, updatedList: toEdit[0] }));
         }}
       >
         Save Changes

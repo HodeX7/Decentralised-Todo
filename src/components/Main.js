@@ -5,12 +5,19 @@ import "../App.css";
 import List from "./List";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
-import { todoListStateSelector } from "../todoSlice";
+import { todoListStateSelector, addList } from "../todoSlice";
+import { listsStateSelector } from "../listSlice";
+import { useDispatch } from "react-redux";
+
 const Main = () => {
-  const [lists, setLists] = useState([]);
-  const [title, setTitle] = useState("");
   const { todoList } = useSelector(todoListStateSelector);
-  console.log("List", todoList);
+  // console.log("This is the state", todoList);
+  // const [lists, setLists] = useState([]);
+  const [title, setTitle] = useState("");
+  const [id, setId] = useState(0);
+  // const { todoList } = useSelector(todoListStateSelector);
+  // console.log("List", todoList);
+  const dispatch = useDispatch();
   const onDragEnd = (result) => {
     const { source, destination } = result;
     console.log(source, destination);
@@ -31,16 +38,13 @@ const Main = () => {
           display: "flex",
         }}
       >
-        {
-          // console.log("type of list is" + typeof lists)
-          lists.map((list, index) => {
-            return <List key={index} title={list} />;
-          })
-        }
+        {todoList.map((list, index) => {
+          return <List key={index} list={list} />;
+        })}
         <Box
           sx={{
             backgroundColor: "#242731",
-            width: "15vw",
+            width: "auto",
             padding: "1vh",
             borderRadius: "10px",
             display: "flex",
@@ -67,9 +71,11 @@ const Main = () => {
               if (title === "") {
                 window.alert("Title cannot be empty");
               } else {
-                const newList = [...lists, title];
-                setLists(newList);
-                console.log(lists);
+                dispatch(addList({ id: id, title: title, todos: [] }));
+                setId((id) => id + 1);
+                // const newList = [...lists, title];
+                // setLists(newList);
+                // console.log(lists);
                 setTitle("");
               }
             }}
