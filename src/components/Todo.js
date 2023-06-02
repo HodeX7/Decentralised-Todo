@@ -4,9 +4,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import EditDrawer from "./EditDrawer";
+import { Draggable } from "react-beautiful-dnd";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useDispatch } from "react-redux";
+import { removeTodo } from "../todoSlice";
 
-const Todo = ({ title, desc }) => {
+const Todo = ({ todoList, setTodoList, index, title, desc, id }) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const toggleDrawer = (open) => (event) => {
     if (
       event &&
@@ -20,36 +25,71 @@ const Todo = ({ title, desc }) => {
   };
 
   return (
-    <div
-      style={{
-        marginTop: "2vh",
-        border: "2px dotted rgb(78, 78, 78)",
-        padding: "1vh",
-        borderRadius: "10px",
+    <Draggable draggableId={id.toString()} index={index}>
+      {(provided) => {
+        return (
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            style={{
+              marginTop: "2vh",
+              border: "2px dotted rgb(78, 78, 78)",
+              padding: "1vh",
+              borderRadius: "10px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <WorkspacePremiumIcon />
+              <h4 style={{ marginRight: "auto", marginLeft: "0.5vw" }}>
+                {title}
+              </h4>
+              <IconButton onClick={toggleDrawer(true)}>
+                <EditIcon className="addButton" sx={{ cursor: "pointer" }} />
+              </IconButton>
+              {/* Implement Delete Todo logic from smart contract */}
+              <IconButton
+                onClick={() => {
+                  dispatch(removeTodo(id));
+                }}
+              >
+                <DeleteIcon className="addButton" sx={{ cursor: "pointer" }} />
+              </IconButton>
+            </div>
+            <p style={{ color: "#808191", margin: "0" }}>{desc}</p>
+            <Drawer
+              sx={{
+                // width: drawerWidth,
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                  // width: drawerWidth,
+                  boxSizing: "border-box",
+                  backgroundColor: "#000000",
+                  color: "rgb(121, 121, 121)",
+                  top: "13vh",
+                  borderLeft: "1px solid rgb(78, 78, 78)",
+                },
+              }}
+              // variant="temporary"
+              onClose={toggleDrawer(false)}
+              anchor="right"
+              open={open}
+            >
+              <EditDrawer
+                todoList={todoList}
+                id={id}
+                setTodoList={setTodoList}
+              />
+            </Drawer>
+          </div>
+        );
       }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <WorkspacePremiumIcon />
-        <h4 style={{ marginRight: "auto", marginLeft: "0.5vw" }}>{title}</h4>
-        <IconButton onClick={toggleDrawer(true)}>
-          <EditIcon className="addButton" sx={{ cursor: "pointer" }} />
-        </IconButton>
-      </div>
-      <p style={{ color: "#808191", margin: "0" }}>{desc}</p>
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-      >
-        <EditDrawer />
-      </Drawer>
-    </div>
+    </Draggable>
   );
 };
 

@@ -2,8 +2,6 @@ import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -78,7 +76,6 @@ export default function PersistentDrawerLeft() {
         sx={{
           ...(open && { display: "none" }),
           color: "white",
-          mt: -47,
           ml: 1,
         }}
       >
