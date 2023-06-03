@@ -4,7 +4,7 @@ import { Box, Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { changeTodo } from "../todoSlice";
 import { useSelector } from "react-redux";
-const EditDrawer = ({ id, listId }) => {
+const EditDrawer = ({ id, listId, setOpen }) => {
   const dispatch = useDispatch();
   const [editTodo, setEditTodo] = useState({
     title: "",
@@ -112,7 +112,8 @@ const EditDrawer = ({ id, listId }) => {
             }
             return ele;
           });
-          dispatch(changeTodo({ id: listId, updatedList: toEdit[0] }));
+          dispatch(changeTodo({ id: listId, updatedList: toEdit[listId] }));
+          setOpen(false);
         }}
       >
         Save Changes

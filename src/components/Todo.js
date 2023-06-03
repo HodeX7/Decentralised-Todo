@@ -80,7 +80,7 @@ const Todo = ({ index, title, desc, id, listId }) => {
               anchor="right"
               open={open}
             >
-              <EditDrawer id={id} listId={listId} />
+              <EditDrawer id={id} listId={listId} setOpen={setOpen} />
             </Drawer>
           </div>
         );
